@@ -1,7 +1,14 @@
-# Tauri + React + Typescript
+# Pasty
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+Pasty is a lightweight application designed to help you manage and reuse templates effeortlessly.
 
-## Recommended IDE Setup
+## Features
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+- Save templates: Create and store templates for reuse.
+
+## Future Plans
+- Add support for organizing templates into categories
+- Provide customization options for clipboard formatting
+
+## Contributing
+Please check out [CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidelines on how to contribute.
