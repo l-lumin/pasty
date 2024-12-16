@@ -1,50 +1,68 @@
+import { Textarea } from "@headlessui/react";
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 
-function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
+function App() {
+  const [templates, setTemplates] = useState<string[]>([]);
+  const [newTemplate, setNewTemplate] = useState("");
+
+  const addTemplate = () => {
+    if (newTemplate.trim()) {
+      setTemplates([...templates, newTemplate]);
+      setNewTemplate("");
+    }
+  };
+
+  const copyToClipboard = async (template: string) => {
+    await writeText(template);
+  };
 
   return (
-    <main className="container">
-      <h1>Welcome to Tauri + React</h1>
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center p-4">
+      <h1 className="text-2xl font-bold mb-4">Pasty</h1>
 
-      <div className="row">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
+      <div className="flex gap-2 mb-4">
+        <Textarea
+          className="border border-gray-300 rounded-md p-2 w-72 h-32 resize-none"
+          placeholder="Enter your template"
+          value={newTemplate}
+          onChange={(e) => setNewTemplate(e.target.value)}
         />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-    </main>
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+          onClick={addTemplate}
+        >
+          Add
+        </button>
+      </div>
+
+      <div className="w-full max-w-md">
+        {templates.length === 0 ? (
+          <p className="text-gray-500">Nothing yet. Add one above!</p>
+        ) : (
+          <ul className="space-y-2">
+            {templates.map((template, index) => (
+              <li
+                key={index}
+                className="flex justify-between items-center p-2 border border-gray-300 rounded-md"
+              >
+                <span className="whitespace-pre-wrap break-words">
+                  {template}
+                </span>
+                <button
+                  className="text-blue-500 hover:underline"
+                  onClick={() => copyToClipboard(template)}
+                >
+                  Copy
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
   );
 }
 
